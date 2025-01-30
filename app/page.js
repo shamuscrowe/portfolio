@@ -26,7 +26,6 @@ export default function PortfolioPage() {
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
   const [clickStartTime, setClickStartTime] = useState(0);
 
-  // Reset zoom on page load
   useEffect(() => {
     setZoomedImage(null);
     setPanPosition({ x: 0, y: 0 });
@@ -36,7 +35,6 @@ export default function PortfolioPage() {
     (e, image) => {
       const clickDuration = Date.now() - clickStartTime;
 
-      // Prevent accidental zooming due to dragging
       if (isDragging || clickDuration > 200) {
         setIsDragging(false);
         return;
@@ -118,8 +116,7 @@ export default function PortfolioPage() {
         {images.map((image, index) => (
           <div
             key={index}
-            className="relative w-full mb-4 overflow-hidden"
-            style={{ width: "100vw" }} // Make image container full width
+            className="relative w-full mb-4"
             onClick={(e) => handleImageClick(e, image)}
             onMouseDown={handleMouseDown}
           >
@@ -127,16 +124,14 @@ export default function PortfolioPage() {
               <img
                 src={image}
                 alt={`Architecture project ${index + 1}`}
-                className="absolute top-0 left-0 w-full h-auto object-contain"
+                className="w-full h-auto object-contain"
                 style={{
-                  width: "100vw", // Ensure images fit browser width
-                  height: "auto",
-                  maxHeight: "100vh", // Prevent image from exceeding screen height
+                  maxHeight: '90vh',
                   cursor: zoomedImage === image ? (isDragging ? "grabbing" : "grab") : "zoom-in",
                   transform:
                     zoomedImage === image
                       ? `scale(${ZOOM_SCALE}) translate(${panPosition.x}px, ${panPosition.y}px)`
-                      : "scale(1) translate(0, 0)", // Prevents images from starting zoomed
+                      : "scale(1) translate(0, 0)",
                   transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
                   transition: isDragging ? "none" : "transform 0.3s ease",
                   userSelect: "none",
