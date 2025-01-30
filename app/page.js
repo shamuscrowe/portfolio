@@ -30,7 +30,6 @@ export default function PortfolioPage() {
     (e, image) => {
       const clickDuration = Date.now() - clickStartTime;
 
-      // Prevent de-zooming if the action was a drag
       if (isDragging || clickDuration > 200) {
         setIsDragging(false);
         return;
@@ -89,7 +88,7 @@ export default function PortfolioPage() {
 
   const handleMouseUp = useCallback(() => {
     if (isDragging) {
-      setIsDragging(false); // Stop dragging
+      setIsDragging(false);
     }
   }, [isDragging]);
 
@@ -100,45 +99,51 @@ export default function PortfolioPage() {
     }
   }, []);
 
-  return (
-    <div
-      className="min-h-screen bg-white background-container"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onClick={handleOutsideClick}
-    >
-      <div className="flex flex-col items-center">
+return (
+  <div
+    className="min-h-screen bg-white background-container"
+    onMouseMove={handleMouseMove}
+    onMouseUp={handleMouseUp}
+    onMouseLeave={handleMouseUp}
+    onClick={handleOutsideClick}
+  >
+    <div className="max-w-[2000px] mx-auto">
+      <div className="flex flex-col items-center w-full">
         {images.map((image, index) => (
           <div
             key={index}
-            className="relative w-full max-w-screen-lg mb-4 overflow-hidden"
+            className="relative w-full"
             onClick={(e) => handleImageClick(e, image)}
             onMouseDown={handleMouseDown}
+            style={{
+              height: 'auto',
+              lineHeight: '0' // This removes any potential line-height gaps
+            }}
           >
-            <div className="relative w-full" style={{ paddingBottom: '66.67%' }}>
-              <img
-                src={image}
-                alt={`Architecture project ${index + 1}`}
-                className="absolute top-0 left-0 w-full h-full object-cover"
-                style={{
-                  cursor: zoomedImage === image ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in',
-                  transform:
-                    zoomedImage === image
-                      ? `scale(${ZOOM_SCALE}) translate(${panPosition.x}px, ${panPosition.y}px)`
-                      : 'scale(1)',
-                  transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
-                  transition: isDragging ? 'none' : 'transform 0.3s',
-                  userSelect: 'none',
-                  pointerEvents: 'auto',
-                  willChange: 'transform',
-                }}
-                draggable="false"
-              />
-            </div>
+            <img
+              src={image}
+              alt={`Architecture project ${index + 1}`}
+              className="w-full h-auto"
+              style={{
+                cursor: zoomedImage === image ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in',
+                transform:
+                  zoomedImage === image
+                    ? `scale(${ZOOM_SCALE}) translate(${panPosition.x}px, ${panPosition.y}px)`
+                    : 'scale(1)',
+                transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
+                transition: isDragging ? 'none' : 'transform 0.3s',
+                userSelect: 'none',
+                pointerEvents: 'auto',
+                willChange: 'transform',
+                display: 'block', // This removes any inline-block spacing
+                maxWidth: '100%',
+              }}
+              draggable="false"
+            />
           </div>
         ))}
       </div>
     </div>
-  );
+  </div>
+);
 }
